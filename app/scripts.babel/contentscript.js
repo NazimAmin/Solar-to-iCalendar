@@ -1,27 +1,53 @@
 'use strict';
-
 $(document).ready(function () {
+    //check to see if we are in "Search for Classes" page
     $('#ptifrmtgtframe').bind('load change', function () {
         var iframe = $('#ptifrmtgtframe').contents();
-        // call on "Search" button clicked
-        $(iframe).delegate('#win0divDERIVED_SSTSNAV_SSS_SUBFOOT_LINKS', 'click', function () {
-            getClassSchedule();
-        });
+
+        //radio button change
+        var radioButton = iframe.find('#DERIVED_REGFRM1_SSR_SCHED_FORMAT\\$258\\$');
+        if (radioButton.length > 0) {
+            draw_download_button();
+        }
     });
     $('#ptifrmtgtframe').trigger('change');
 });
 
+function draw_download_button() {
+    var iframe = $('#ptifrmtgtframe').contents();
+    var place = iframe.find('#win0divDERIVED_REGFRM1_SA_STUDYLIST_SHOW');
+    if (place.length > 0) {
+        var path = chrome.extension.getURL('quality.css');
+        $(iframe.find('head')).append($('<link>')
+            .attr("rel", "stylesheet")
+            .attr("type", "text/css")
+            .attr("href", path));
+        var exist = iframe.find('#download_calendar');
+        if (exist.length < 1) {
+            var newt = '<div><a class="export-button" id="download_calendar" title="Export schedule in .ics format to import to your Google / iCloud Calendar"><svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 26.2 18.9"><defs><style>.cls-1{fill:#369;}</style></defs><title>noun_82396_cc</title><path class="cls-1" d="M30.7,4.4H17.4a1.3,1.3,0,0,0-1.1,1.3v6.9H12.9l5.2,5.2,5.2-5.2H19.9V7.5h7.7V19.7H8.6V4.5H5.5a0.4,0.4,0,0,0-.5.4V22.8a0.47,0.47,0,0,0,.5.5H30.7a0.47,0.47,0,0,0,.5-0.5V4.9A0.64,0.64,0,0,0,30.7,4.4Z" transform="translate(-5 -4.4)"/></svg>Export Schedule</a></div>';
+            $(newt).insertBefore(place);
+            $(iframe).delegate('.export-button', 'click', function () {
+                getClassSchedule();
+            });
+        }
+
+    } else {
+        setTimeout(draw_download_button, 2000);
+    }
+}
 //get each schedule and build up the complete calendar 
 function getClassSchedule() {
     var iframe = $('#ptifrmtgtframe').contents();
     var existsInIframe = iframe.find('#ACE_STDNT_ENRL_SSV2\\$0');
     if (existsInIframe.length > 0) {
+        var cal_name = iframe.find('#DERIVED_REGFRM1_SSR_STDNTKEY_DESCR\\$11\\$').text().split('|')[0].toString();
         var hold_events = [];
         var startCalendar = [
         'BEGIN:VCALENDAR',
         'VERSION:2.0',
         'CALSCALE:GREGORIAN',
         'METHOD:PUBLISH',
+        'X-WR-CALNAME:' + cal_name.trim(),
         'X-WR-TIMEZONE:America/New_York',
         'TZID:America/New_York',
         'X-LIC-LOCATION:America/New_York'
@@ -46,8 +72,9 @@ function getClassSchedule() {
             }
         });
         var calendar = startCalendar.concat(hold_events, endCalendar).join('\r\n');
-        console.log(calendar);
-
+        if (calendar && calendar.length > 0) {
+            window.open("data:text/calendar;charset=utf8," + encodeURI(calendar));
+        }
     } else {
         setTimeout(getClassSchedule, 2000);
     }
