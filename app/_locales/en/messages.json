@@ -1,0 +1,10 @@
+{
+  "appName": {
+    "message": "Cal To Call",
+    "description": "The name of the application"
+  },
+  "appDescription": {
+    "message": "Export schedule from Solar to .ICS",
+    "description": "The description of the application"
+  }
+}
