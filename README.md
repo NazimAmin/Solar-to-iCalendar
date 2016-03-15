@@ -1,9 +1,9 @@
 # Solar-to-iCalendar
-Export Schedule from Stony Brook's Solar to iCalendar format
+Exports Schedule from Stony Brook's Solar to iCalendar format
 
-This is an addon to RateSBU
+_This is an addon to RateSBU_
 
-#What it does
+#What it does?
 This extension exports schedule from Stony Brook University's Solar system in ics format so you can import it to your favorite calendar service.
   1. Adds a button in Solar that invokes and scrapes all the schedule
   2. Creates event in ics standard format
