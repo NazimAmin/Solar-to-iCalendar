@@ -5,8 +5,8 @@ _This is an addon to RateSBU_
 
 #What it does?
 This extension exports schedule from Stony Brook University's Solar system in ics format so you can import it to your favorite calendar service.
-  1. Adds a button in Solar that invokes and scrapes all the schedule
-  2. Creates event in ics standard format
+  1. Adds a button in Solar that invokes and parses all the schedule
+  2. Creates events in ics standard format
   3. Exports to file system
   
 #Why?
